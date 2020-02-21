@@ -1,0 +1,11 @@
+The code should handle correctly the following:
+
+
+
+
+White    space.
+
+"Sequences of punctuation marks?!!"
+Periods with or without spaces: a. . a.a
+Don't worry about numbers like 1.5
+Remove Capitalization
