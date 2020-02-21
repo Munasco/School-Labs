@@ -1,4 +1,6 @@
 from utilities import *
+
+
 def parse_story(file_name):
     '''
     (string)->list
@@ -155,11 +157,11 @@ def gen_bot_list(ngram_model, seed, num_tokens= 0):
             return answer
 def gen_bot_text(token_list, bad_author):
     '''
-        (string)->list
-        This function, collects input from a file, and separates the strings and put it in a list satisfying various conditions for punctuations
-        >>>parse_story('This "world" is too good.')
-        ['This', 'world', 'is', 'too', 'good', '.']
-        '''    
+    (string)->list
+                This function, collects input from a file, and separates the strings and put it in a list satisfying various conditions for punctuations
+                >>>parse_story('This "world" is too good.')
+                ['This', 'world', 'is', 'too', 'good', '.']
+    '''
     answer = ''
     if bad_author == True:
         for i in range(len(token_list)):
@@ -176,7 +178,7 @@ def gen_bot_text(token_list, bad_author):
                     continue
                 else:
                     token_list[i] = token_list[i][0].upper() + token_list[i][1:].lower()
-                    sentence = token_list[i]
+                    answer = token_list[i]
             else:
                 if token_list[i-1] in END_OF_SENTENCE_PUNCTUATION:
                     if token_list[i] in VALID_PUNCTUATION:
@@ -194,12 +196,7 @@ def gen_bot_text(token_list, bad_author):
                         answer = answer + token_list[i] 
                         
     return answer    
-                
-                                    
-                                    
-                        
-
-ngram_counts= {('i', 'love'): [['js', 'py3', 'c', 'no'], [20, 10, 20, 20]],('u', 'r'): [['cool', 'nice', 'lit', 'kind', 'tyd'], [8, 7, 5, 5, 8]],('toronto', 'is'): [['six', 'drake', 'ler'], [2, 3, 5]]}
+#    ngram_counts= {('i', 'love'): [['js', 'py3', 'c', 'no'], [20, 10, 20, 20]],('u', 'r'): [['cool', 'nice', 'lit', 'kind', 'tyd'], [8, 7, 5, 5, 8]],('toronto', 'is'): [['six', 'drake', 'ler'], [2, 3, 5]]}
 #print(build_ngram_model(x_1, 2)) 
 print(gen_bot_list(build_ngram_model(x_1, 3), ('i', 'remember', 'going'), 7))
 
@@ -224,7 +221,6 @@ def write_story(file_name, text, title, student_name, author, year):
     finished = False
     line_count = 0
     new_page = 1
-    terminate = False
     page_new_chapter = False
     chapter_number = 1
     while start+ 90 < len(text):
@@ -267,5 +263,3 @@ def write_story(file_name, text, title, student_name, author, year):
     f.close()
 if __name__ == '__main__':
     write_story('new_text.txt', text, 'Three Men in a Boat', 'Jerome K. Jerome', 'Jerome K. Jerome', 1889)
-    
-    
