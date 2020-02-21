@@ -54,9 +54,9 @@ def build_n_grams(words, n):
         Input format 
         words:  a list of words  obtained  from parse_story n: the  size of the  N-gram
         Sample inputs
-        >>> words = [‘the’, ‘child’, ‘will’, ‘go’, ‘out’, ‘to’, ‘play’, ‘,’, ‘and’, ‘the’, ‘child’, ‘can’, ‘not’, ‘be’, ‘sad’, ‘anymore’, ‘.’]
+        >>> words = ['the', 'child', 'will', 'go', 'out', 'to', 'play', ',', 'and', 'the', 'child', 'can', 'not', 'be', 'sad', 'anymore', '.']
         >>> build_ngram_counts(words, 2)
-        {(‘the’, ‘child’): [[‘will’, ‘can’], [1, 1]],(‘child’, ‘will’): [[‘go’], [1]], (‘will’, ‘go’): [[‘out’], [1]], (‘go’, out’): [[‘to’], [1]],(‘out’, ‘to’): [[‘play’], [1]], (‘to’, ‘play’): [[‘,’], [1]], (‘play’, ‘,’): [[‘and’], [1]], (‘,’, ‘and’): [[‘the’], [1]], (‘and’, ‘the’): [[‘child’], [1]], (‘child’, ‘can’): [[‘not’], [1]], (‘can’, ‘not’): [[‘be’], [1]], (‘not’, ‘be’): [[‘sad’], [1]], (‘be’, ‘sad’): [[‘anymore’],[1]],(‘sad’, ‘anymore’): [[‘.’], [1]]}Note:•Thekey-value  pairs do  not have  to appear  in  the  exact  orderabove because  Python dictionaries areunordered.•The wordsand countsdo  not  have to appear in the  exact order above(though  it may be helpful to store the counts  in sorted order),but the wordsand counts  indices mustmatch. e.g. the  value [[‘at’, ‘be’],  [4,  2]]  means  that “at” appears four times, and “be” appears twice.
+        {('the', 'child'): [['will', 'can'], [1, 1]],('child', 'will'): [['go'], [1]], ('will', 'go'): [['out'], [1]], ('go', out'): [['to'], [1]],('out', 'to'): [['play'], [1]], ('to', 'play'): [[','], [1]], ('play', ','): [['and'], [1]], (',', 'and'): [['the'], [1]], ('and', 'the'): [['child'], [1]], ('child', 'can'): [['not'], [1]], ('can', 'not'): [['be'], [1]], ('not', 'be'): [['sad'], [1]], ('be', 'sad'): [['anymore'],[1]],('sad', 'anymore'): [['.'], [1]]}Note:•Thekey-value  pairs do  not have  to appear  in  the  exact  orderabove because  Python dictionaries areunordered.•The wordsand countsdo  not  have to appear in the  exact order above(though  it may be helpful to store the counts  in sorted order),but the wordsand counts  indices mustmatch. e.g. the  value [['at', 'be'],  [4,  2]]  means  that “at” appears four times, and “be” appears twice.
         '''    
     p = {}
     for i in range(len(words)-n):
@@ -80,9 +80,9 @@ def prune_ngram_counts(counts, prune_len):
     Input format counts:  a  dictionary  of  N-grams  and word counts formatted according  to the  output  of build_ngram_counts 
     prune_len:  the number of highest frequency  words to  keep (potentially more if ties occur)
     Sample inputs
-    >>> ngram_counts= {(‘i’, ‘love’): [[‘js’, ‘py3’, ‘c’, ‘no’], [20, 20, 10, 2]],(‘u’, ‘r’): [[‘cool’, ‘nice’, ‘lit’, 'kind’], [8, 7, 5, 5]],('toronto’, ‘is’): [[‘six’, ‘drake’], [2, 3]]}
+    >>> ngram_counts= {('i', 'love'): [['js', 'py3', 'c', 'no'], [20, 20, 10, 2]],('u', 'r'): [['cool', 'nice', 'lit', 'kind'], [8, 7, 5, 5]],('toronto', 'is'): [['six', 'drake'], [2, 3]]}
     >>> prune_ngram_counts(ngram_counts, 3)
-    {(‘i’, ‘love’): [[‘js’, ‘py3’, ‘c’], [20, 20, 10]],(‘u’, ‘r’): [[‘cool’, ‘nice’, ‘lit’, 'kind’], [8, 7, 5, 5]],('toronto’, ‘is’): [[‘six’, ‘drake’],[2, 3]]}
+    {('i', 'love'): [['js', 'py3', 'c'], [20, 20, 10]],('u', 'r'): [['cool', 'nice', 'lit', 'kind'], [8, 7, 5, 5]],('toronto', 'is'): [['six', 'drake'],[2, 3]]}
         '''    
     n = prune_len
     for i in counts:
@@ -112,8 +112,8 @@ def probify_ngram_counts(counts):
         The probability of  each word is defined  as the observed  count divided  by  the  total count of all words.
         Input format counts:  a dictionary of N-grams and word counts  formatted according to  the output  of prune_ngram_counts 
         Sample inputs
-        >>> ngram_counts = {(‘i’, ‘love’): [[‘js’, ‘py3’, ‘c’], [20, 20, 10]],(‘u’, ‘r’): [[‘cool’, ‘nice’, ‘lit’, 'kind’], [8, 7, 5, 5]],('toronto’, ‘is’): [[‘six’, ‘drake’], [2, 3]]}
-        >>> probify_ngram_counts(ngram_counts){(‘i’, ‘love’): [[‘js’, ‘py3’, ‘c’], [0.4, 0.4, 0.2]],(‘u’, ‘r’): [[‘cool’, ‘nice’, ‘lit’, 'kind’], [0.32, 0.28, 0.2, 0.2]],('toronto’, ‘is’): [[‘six’, ‘drake’], [0.4, 0.6]]}
+        >>> ngram_counts = {('i', 'love'): [['js', 'py3', 'c'], [20, 20, 10]],('u', 'r'): [['cool', 'nice', 'lit', 'kind'], [8, 7, 5, 5]],('toronto', 'is'): [['six', 'drake'], [2, 3]]}
+        >>> probify_ngram_counts(ngram_counts){('i', 'love'): [['js', 'py3', 'c'], [0.4, 0.4, 0.2]],('u', 'r'): [['cool', 'nice', 'lit', 'kind'], [0.32, 0.28, 0.2, 0.2]],('toronto', 'is'): [['six', 'drake'], [0.4, 0.6]]}
         '''    
     for i in counts:
         counts[i][1] = get_prob_from_count(counts[i][1])
@@ -128,8 +128,8 @@ def build_ngram_model(words, n):
         Input format words:  a list of words/punctuation  obtained  from parse_story 
         n: the  size of N in the N-grams.
         Sample inputs
-        >>> words = [‘the’, ‘child’, ‘will’, ‘the’, ‘child’, ‘can’, ‘the’, ‘child’, ‘will’, ‘the’, ‘child’, ‘may’,‘go’, ‘home’, ‘.’]
-        >>> build_ngram_model(words, 2){(‘the’, ‘child’): [[‘will’, ‘can’, ‘may’], [0.5, 0.25, 0.25]],(‘child’, ‘will’): [[‘the’], [1.0]],(‘will’, ‘the’): [[‘child’],[1.0]],(‘child’, ‘can’): [[‘the’], [1.0]],(‘can’, ‘the’): [[‘child’], [1.0]],(‘child’, ‘may’): [[‘go’], [1.0]],(‘may’, ‘go’): [[‘home’], [1.0]],(‘go’, ‘home’): [[‘.’], [1.0]]}
+        >>> words = ['the', 'child', 'will', 'the', 'child', 'can', 'the', 'child', 'will', 'the', 'child', 'may','go', 'home', '.']
+        >>> build_ngram_model(words, 2){('the', 'child'): [['will', 'can', 'may'], [0.5, 0.25, 0.25]],('child', 'will'): [['the'], [1.0]],('will', 'the'): [['child'],[1.0]],('child', 'can'): [['the'], [1.0]],('can', 'the'): [['child'], [1.0]],('child', 'may'): [['go'], [1.0]],('may', 'go'): [['home'], [1.0]],('go', 'home'): [['.'], [1.0]]}
         '''    
     counts = probify_ngram_counts(prune_ngram_counts(build_n_grams(words, n), 15))
     for i in counts:
