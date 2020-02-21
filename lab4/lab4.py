@@ -33,20 +33,28 @@ def parse_story(file_name):
 
 def get_prob_from_count(x):
     '''
-        (string)->list
-        This function, collects input from a file, and separates the strings and put it in a list satisfying various conditions for punctuations
-        >>>parse_story('This "world" is too good.')
-        ['This', 'world', 'is', 'too', 'good', '.']
-        '''    
-    return ([i/sum(x) for i in x])
+   Return a list of probabilitiesderived from counts. Counts is a list of counts  of occurrences of a token after the  previous n-gram.
+   You should  not  round  the probabilities.
+   Input format counts:  a list of positive integer counts
+   Sample inputs
+   >>> get_prob_from_count([10, 20, 40, 30])
+   [0.1, 0.2, 0.4, 0.3]
+    '''
+  return ([i/sum(x) for i in x])
 x_1 = parse_story('308.txt')
 
 def build_n_grams(words, n):
     '''
-        (string)->list
-        This function, collects input from a file, and separates the strings and put it in a list satisfying various conditions for punctuations
-        >>>parse_story('This "world" is too good.')
-        ['This', 'world', 'is', 'too', 'good', '.']
+        Return a dictionary of N-grams (where N=n) and the counts of the  words  that follow  the N-gram.
+        The key  of  the  dictionary will be  the  N-gram in a tuple.
+        The  corresponding  value will be a list containing two  lists.
+        The first list contains the words and the second list contains the corresponding  counts.
+        Input format 
+        words:  a list of words  obtained  from parse_story n: the  size of the  N-gram
+        Sample inputs
+        >>> words = [‘the’, ‘child’, ‘will’, ‘go’, ‘out’, ‘to’, ‘play’, ‘,’, ‘and’, ‘the’, ‘child’, ‘can’, ‘not’, ‘be’, ‘sad’, ‘anymore’, ‘.’]
+        >>> build_ngram_counts(words, 2)
+        {(‘the’, ‘child’): [[‘will’, ‘can’], [1, 1]],(‘child’, ‘will’): [[‘go’], [1]], (‘will’, ‘go’): [[‘out’], [1]], (‘go’, out’): [[‘to’], [1]],(‘out’, ‘to’): [[‘play’], [1]], (‘to’, ‘play’): [[‘,’], [1]], (‘play’, ‘,’): [[‘and’], [1]], (‘,’, ‘and’): [[‘the’], [1]], (‘and’, ‘the’): [[‘child’], [1]], (‘child’, ‘can’): [[‘not’], [1]], (‘can’, ‘not’): [[‘be’], [1]], (‘not’, ‘be’): [[‘sad’], [1]], (‘be’, ‘sad’): [[‘anymore’],[1]],(‘sad’, ‘anymore’): [[‘.’], [1]]}Note:•Thekey-value  pairs do  not have  to appear  in  the  exact  orderabove because  Python dictionaries areunordered.•The wordsand countsdo  not  have to appear in the  exact order above(though  it may be helpful to store the counts  in sorted order),but the wordsand counts  indices mustmatch. e.g. the  value [[‘at’, ‘be’],  [4,  2]]  means  that “at” appears four times, and “be” appears twice.
         '''    
     p = {}
     for i in range(len(words)-n):
@@ -63,10 +71,16 @@ def build_n_grams(words, n):
 
 def prune_ngram_counts(counts, prune_len):
     '''
-        (string)->list
-        This function, collects input from a file, and separates the strings and put it in a list satisfying various conditions for punctuations
-        >>>parse_story('This "world" is too good.')
-        ['This', 'world', 'is', 'too', 'good', '.']
+    Return a dictionary of N-grams and counts  of words with lower frequency (i.e. occurring less often) words  removed.
+    You  will  prune  the  words  based  on  their  counts,  keeping  the prune_len highest frequency  words.
+    In  case of  a tie(for example, if prune_len was 5 and the 5th and 6th most  frequent  words had the  same frequency), 
+    then keep  all words  that are in the tie(e.g. keep both the 5th and 6th words).
+    Input format counts:  a  dictionary  of  N-grams  and word counts formatted according  to the  output  of build_ngram_counts 
+    prune_len:  the number of highest frequency  words to  keep (potentially more if ties occur)
+    Sample inputs
+    >>> ngram_counts= {(‘i’, ‘love’): [[‘js’, ‘py3’, ‘c’, ‘no’], [20, 20, 10, 2]],(‘u’, ‘r’): [[‘cool’, ‘nice’, ‘lit’, 'kind’], [8, 7, 5, 5]],('toronto’, ‘is’): [[‘six’, ‘drake’], [2, 3]]}
+    >>> prune_ngram_counts(ngram_counts, 3)
+    {(‘i’, ‘love’): [[‘js’, ‘py3’, ‘c’], [20, 20, 10]],(‘u’, ‘r’): [[‘cool’, ‘nice’, ‘lit’, 'kind’], [8, 7, 5, 5]],('toronto’, ‘is’): [[‘six’, ‘drake’],[2, 3]]}
         '''    
     n = prune_len
     for i in counts:
@@ -92,10 +106,12 @@ def prune_ngram_counts(counts, prune_len):
     return counts
 def probify_ngram_counts(counts):
     '''
-        (string)->list
-        This function, collects input from a file, and separates the strings and put it in a list satisfying various conditions for punctuations
-        >>>parse_story('This "world" is too good.')
-        ['This', 'world', 'is', 'too', 'good', '.']
+        Take a  dictionary  of N-grams  and  counts  and  convert the  counts  to  probabilities.
+        The probability of  each word is defined  as the observed  count divided  by  the  total count of all words.
+        Input format counts:  a dictionary of N-grams and word counts  formatted according to  the output  of prune_ngram_counts 
+        Sample inputs
+        >>> ngram_counts = {(‘i’, ‘love’): [[‘js’, ‘py3’, ‘c’], [20, 20, 10]],(‘u’, ‘r’): [[‘cool’, ‘nice’, ‘lit’, 'kind’], [8, 7, 5, 5]],('toronto’, ‘is’): [[‘six’, ‘drake’], [2, 3]]}
+        >>> probify_ngram_counts(ngram_counts){(‘i’, ‘love’): [[‘js’, ‘py3’, ‘c’], [0.4, 0.4, 0.2]],(‘u’, ‘r’): [[‘cool’, ‘nice’, ‘lit’, 'kind’], [0.32, 0.28, 0.2, 0.2]],('toronto’, ‘is’): [[‘six’, ‘drake’], [0.4, 0.6]]}
         '''    
     for i in counts:
         counts[i][1] = get_prob_from_count(counts[i][1])
@@ -103,10 +119,15 @@ def probify_ngram_counts(counts):
 
 def build_ngram_model(words, n):
     '''
-        (string)->list
-        This function, collects input from a file, and separates the strings and put it in a list satisfying various conditions for punctuations
-        >>>parse_story('This "world" is too good.')
-        ['This', 'world', 'is', 'too', 'good', '.']
+        Create  and  return  a  dictionary  of  the  format  given  above  in probify_ngram_counts.
+        This dictionary is your  final model that will be used  to auto-generate text.
+        For  your  final model,  keep  the  15  most likely  words  that  follow  an  N-gram.
+        Moreover,  for each N-gram, the corresponding next words should appear in descending order of probability.
+        Input format words:  a list of words/punctuation  obtained  from parse_story 
+        n: the  size of N in the N-grams.
+        Sample inputs
+        >>> words = [‘the’, ‘child’, ‘will’, ‘the’, ‘child’, ‘can’, ‘the’, ‘child’, ‘will’, ‘the’, ‘child’, ‘may’,‘go’, ‘home’, ‘.’]
+        >>> build_ngram_model(words, 2){(‘the’, ‘child’): [[‘will’, ‘can’, ‘may’], [0.5, 0.25, 0.25]],(‘child’, ‘will’): [[‘the’], [1.0]],(‘will’, ‘the’): [[‘child’],[1.0]],(‘child’, ‘can’): [[‘the’], [1.0]],(‘can’, ‘the’): [[‘child’], [1.0]],(‘child’, ‘may’): [[‘go’], [1.0]],(‘may’, ‘go’): [[‘home’], [1.0]],(‘go’, ‘home’): [[‘.’], [1.0]]}
         '''    
     counts = probify_ngram_counts(prune_ngram_counts(build_n_grams(words, n), 15))
     for i in counts:
@@ -126,10 +147,29 @@ def build_ngram_model(words, n):
 def gen_bot_list(ngram_model, seed, num_tokens= 0):    
             z = True
             '''
-                (string)->list
-                This function, collects input from a file, and separates the strings and put it in a list satisfying various conditions for punctuations
-                >>>parse_story('This "world" is too good.')
-                ['This', 'world', 'is', 'too', 'good', '.']
+            Returns a randomly generated list of  tokens  (strings) that starts  with the  N tokens  in seed, selecting  all subsequent  tokens  using gen_next_token.
+            The list  ends  when  any  of  the following happens:
+            •List contains num_tokens tokens, including  repetitions.In  case  seed  is  longer than num_tokens, the  returned  list should  contain  the  first num_tokens tokens ofthe seed.
+            •Any  of the  assumptions  of gen_next_token is violated.
+            I.e. if either an N-gram is not in the model, or if an N-gram has no tokens  that follow it.
+            Input format ngram_model: the  format  of  this  input  is  the  same  as  the  format  of  the  output of build_ngram_model.
+            However,  your  code for  this  function should  be  able  to  handle cases where not all N-grams are present in the dictionary.
+            seed: a tuple of strings representing the first N tokens  in the  list.num_tokens: a positive intrepresenting the largest number of tokens  to be put  in the  list
+            Assume  that you  will never have a test case where N in the ngram_model and N in the seed are mismatched.
+            For  example, if ngram_model contains  4-grams, seed will be  a 4-gram as well.
+            Sample inputs and outputs
+            >>> ngram_model = {('the', 'child'): [['will', 'can','may'], [0.5, 0.25, 0.25]], 
+            \('child', 'will'): [['the'], [1.0]], \('will', 'the'): [['child'], [1.0]], \('child', 'can'): [['the'], [1.0]], \('can', 'the'): [['child'], [1.0]], \('child', 'may'): [['go'], [1.0]], \('may', 'go'): [['home'], [1.0]], \('go', 'home'): [['.'], [1.0]] \}
+            >>> random.seed(10)
+            >>> gen_bot_list(ngram_model, ('hello', 'world'))
+            []
+            >>> gen_bot_list(ngram_model, ('hello', 'world'), 5)
+            ['hello', 'world']
+            >>> gen_bot_list(ngram_model, ('the', 'child'), 5)
+            ['the', 'child', 'can']
+            Note  that the removal of the  crossed out ('child', 'can') 2-gram is the reason for the termination.
+            >>> gen_bot_list(ngram_model, ('the', 'child'), 5)
+            ['the', 'child', 'will', 'the', 'child']
                 '''            
             r = 0
             answer = list(seed[:])
@@ -155,10 +195,7 @@ def gen_bot_list(ngram_model, seed, num_tokens= 0):
             return answer
 def gen_bot_text(token_list, bad_author):
     '''
-        (string)->list
-        This function, collects input from a file, and separates the strings and put it in a list satisfying various conditions for punctuations
-        >>>parse_story('This "world" is too good.')
-        ['This', 'world', 'is', 'too', 'good', '.']
+     Consider lab4v2.pdf
         '''    
     answer = ''
     if bad_author == True:
@@ -207,10 +244,7 @@ text = ' '.join(x_1)
 
 def write_story(file_name, text, title, student_name, author, year):
     '''
-        (string)->list
-        This function, collects input from a file, and separates the strings and put it in a list satisfying various conditions for punctuations
-        >>>parse_story('This "world" is too good.')
-        ['This', 'world', 'is', 'too', 'good', '.']
+       Consider lab4v2.pdf
         '''    
     f = open(file_name, 'w')
     for i in range(10):
